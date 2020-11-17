@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+  <Document name="yaml-utils.ZPM">
+    <Module>
+      <Name>yaml-utils</Name>
+      <Version>0.1.0</Version>
+      <Packaging>module</Packaging>
+      <SourcesRoot>src</SourcesRoot>
+      <Resource Name="YAML.PKG"/>
+    </Module>
+  </Document>
+</Export>
