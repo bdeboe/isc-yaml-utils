@@ -3,10 +3,11 @@
   <Document name="yaml-utils.ZPM">
     <Module>
       <Name>yaml-utils</Name>
-      <Version>0.1.0</Version>
+      <Version>0.1.1</Version>
       <Packaging>module</Packaging>
       <SourcesRoot>src</SourcesRoot>
       <Resource Name="YAML.PKG"/>
+      <UnitTest Name="/test/cls" Package="YAML.Test" Phase="test" />
     </Module>
   </Document>
 </Export>

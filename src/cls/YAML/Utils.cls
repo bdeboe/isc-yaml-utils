@@ -74,7 +74,7 @@ ClassMethod StreamToJSON(yaml As %Stream.Object, Output sc As %Status) As %Dynam
 			
 			set colon = $find(stripped,":")
 			if (colon) {
-				set key = $zstrip($e(stripped,1,colon-1),">W"), 
+				set key = $zstrip($e(stripped,1,colon-2),">W"), 
 					value = $zstrip($e(stripped,colon,*),"<W")
 				
 				if $e(value)="[" {
@@ -98,15 +98,24 @@ ClassMethod StreamToJSON(yaml As %Stream.Object, Output sc As %Status) As %Dynam
 					do stack(indent).%Set(key, value)
 				}
 			} elseif isArray {
-				// simple string value
-				do stack(indent).%Push($zstrip($e(stripped,2,*),"<W"))
+				set stripped = $zstrip($e(stripped,2,*),"<W")
+				if (stripped'="") {
+					// simple string value
+					if ($e(stripped)="""") || ($e(stripped)="'") {
+						set stripped = $e(stripped,2,*-1)
+					}
+					do stack(indent).%Push(stripped)
+				} else {
+					// this is the start of an object
+					set stack(indent+1) = {}
+					do stack(indent).%Push(stack(indent+1))
+				}
 			}
 			
 			set previousIndent = indent
 		}
 		
 	} catch (ex) {
-		b
 		set sc = ex.AsStatus()
 	}
 	quit $g(stack(0))
