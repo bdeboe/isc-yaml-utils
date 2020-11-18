@@ -15,7 +15,7 @@ Method TestFullSwagger() As %Status
         set basedir = ..GetBaseTestDir(.separator)_"files"_separator
 
         // just check if it explodes for now
-        for file = "iknow.yaml", "petstore.yaml" {
+        for file = "iknow.yaml", "petstore.yaml", "petstore2.yaml" {
             set json = ##class(YAML.Utils).FileToJSON(basedir_file, .sc)
             do $$$AssertStatusOK(sc,"Checking file: '"_file_"'")
         }

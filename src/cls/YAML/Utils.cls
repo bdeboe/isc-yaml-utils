@@ -51,7 +51,7 @@ ClassMethod StreamToJSON(yaml As %Stream.Object, Output sc As %Status) As %Dynam
 			
 			set isArray = firstChar="-"
 			if isArray && $$IsEmpty(stack(indent)) {
-				// promote to array	
+				// promote parent to array	
 				set stack(indent) = []
 				do stack(indent-1).%Set(key, stack(indent))
 			}
@@ -74,7 +74,7 @@ ClassMethod StreamToJSON(yaml As %Stream.Object, Output sc As %Status) As %Dynam
 			
 			set colon = $find(stripped,":")
 			if (colon) {
-				set key = $zstrip($e(stripped,1,colon-2),">W"), 
+				set key = $zstrip($e(stripped,$s(isArray:2,1:1),colon-2),"<>W"), 
 					value = $zstrip($e(stripped,colon,*),"<W")
 				
 				if $e(value)="[" {
@@ -90,13 +90,22 @@ ClassMethod StreamToJSON(yaml As %Stream.Object, Output sc As %Status) As %Dynam
 				}
 				
 				if (value="") {
+					// start of a new object
 					set stack(indent+1) = {}
 					do stack(indent).%Set(key, stack(indent+1))
 				} elseif (value="|") {
+					// start of a multiline string
 					set inString = 1
+				} elseif (isArray) {
+					// start of a new object, inside an array
+					set stack(indent+1) = {}
+					do stack(indent+1).%Set(key, value)
+					do stack(indent).%Push(stack(indent+1))
 				} else {
+					// simple new key-value pair
 					do stack(indent).%Set(key, value)
 				}
+
 			} elseif isArray {
 				set stripped = $zstrip($e(stripped,2,*),"<W")
 				if (stripped'="") {
