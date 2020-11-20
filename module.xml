@@ -3,7 +3,8 @@
   <Document name="yaml-utils.ZPM">
     <Module>
       <Name>yaml-utils</Name>
-      <Version>0.1.1</Version>
+      <Version>0.1.2</Version>
+      <Description>Simple ObjectScript YAML-to-JSON converter</Description>
       <Packaging>module</Packaging>
       <SourcesRoot>src</SourcesRoot>
       <Resource Name="YAML.PKG"/>
