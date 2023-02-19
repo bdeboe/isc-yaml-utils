@@ -74,7 +74,7 @@ ClassMethod StreamToJSON(yaml As %Stream.Object, Output sc As %Status) As %Dynam
 			
 			set colon = $find(stripped,":")
 			if (colon) {
-				set key = $zstrip($e(stripped,$s(isArray:2,1:1),colon-2),"<>W"), 
+				set key = $zstrip($e(stripped,$s(isArray:2,1:1),colon-2),"<>W","'"), 
 					value = $zstrip($e(stripped,colon,*),"<W")
 				
 				if $e(value)="[" {
