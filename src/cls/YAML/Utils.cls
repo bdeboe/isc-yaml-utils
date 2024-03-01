@@ -27,7 +27,8 @@ ClassMethod StreamToJSON(yaml As %Stream.Object, Output sc As %Status) As %Dynam
 			inString = 0,
 			key = "",
 			newline = $c(13,10),
-			lineNumber = 0
+			lineNumber = 0,
+			fixedIndent = -1
 		
 		while 'yaml.AtEnd {
 			set line = $replace(yaml.ReadLine(),$c(9),"  "),
@@ -40,6 +41,13 @@ ClassMethod StreamToJSON(yaml As %Stream.Object, Output sc As %Status) As %Dynam
 			
 			// skip empty lines
 			continue:firstChar="" 
+
+			// if this is the very first nonempty line, set fixedIndent and reset indentSize
+			if fixedIndent<0 {
+				set fixedIndent = indentSize,
+					indentSize = 0,
+					indent = 0
+			}
 			
 			// process comments
 			if firstChar="#" {
@@ -133,7 +141,11 @@ GetIndent(string)
 	for i = 1:1 {
 		quit:$e(string,i)'=" "
 	}
+	
+	// substract fixed indent for all lines
+	set:fixedIndent>0 i = i - fixedIndent
 	quit:i=1 0
+	
 	if 'indentSize { // first indent defines indent size
 		set indentSize = i-1
 	}
